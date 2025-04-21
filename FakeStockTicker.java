@@ -6,8 +6,8 @@ public class FakeStockTicker extends JFrame {
         setTitle("Fake Stock Ticker");
         setSize(600, 50);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Center the window
-        JLabel label = new JLabel("EGGS: $30.25");
+        setLocationRelativeTo(null);
+        JLabel label = new JLabel("EGGS: $30.25  PMPRS: $90.75  WATR: $1050.02");
         getContentPane().add(label);
         setVisible(true);
     }
