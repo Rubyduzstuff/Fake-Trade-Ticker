@@ -9,22 +9,25 @@ public class FakeStockTicker extends JFrame {
     private final JLabel tickerLabel;
     private int textOffset = 0;
     private final Timer timer;
+    private final int scrollSpeed = 2;
 
     public FakeStockTicker() {
         setTitle("Fake Stock Ticker");
         setSize(600, 50);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        getContentPane().setLayout(null); // Use null layout for manual positioning
 
         tickerLabel = new JLabel(tickerText);
+        tickerLabel.setSize(tickerText.length() * 10, 30); // Approximate label width
         getContentPane().add(tickerLabel);
 
-        int delay = 100; // Adjust for speed
+        int delay = 50;
         timer = new Timer(delay, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                textOffset++;
-                tickerLabel.setText(tickerText.substring(textOffset % tickerText.length()));
+                textOffset += scrollSpeed;
+                tickerLabel.setLocation(-textOffset, 10); // Adjust Y position as needed
             }
         });
         timer.start();
