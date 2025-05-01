@@ -12,14 +12,16 @@ public class FakeStockTicker extends JFrame {
     private final int scrollSpeed = 2;
 
     public FakeStockTicker() {
-        setTitle("Fake Stock Ticker");
-        setSize(600, 50);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setUndecorated(true); // Remove window decorations
+        setBackground(new Color(0, 0, 0, 0)); // Make background transparent
+        setSize(600, 30);
         setLocationRelativeTo(null);
-        getContentPane().setLayout(null); // Use null layout for manual positioning
+        getContentPane().setLayout(null);
 
         tickerLabel = new JLabel(tickerText);
-        tickerLabel.setSize(tickerText.length() * 10, 30); // Approximate label width
+        tickerLabel.setSize(tickerText.length() * 10, 30);
+        tickerLabel.setForeground(Color.GREEN); // Add some color
+        tickerLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
         getContentPane().add(tickerLabel);
 
         int delay = 50;
@@ -27,11 +29,12 @@ public class FakeStockTicker extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 textOffset += scrollSpeed;
-                tickerLabel.setLocation(-textOffset, 10); // Adjust Y position as needed
+                tickerLabel.setLocation(-textOffset, 0);
             }
         });
         timer.start();
 
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
