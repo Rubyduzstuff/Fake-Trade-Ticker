@@ -12,15 +12,16 @@ public class FakeStockTicker extends JFrame {
     private final int scrollSpeed = 2;
 
     public FakeStockTicker() {
-        setUndecorated(true); // Remove window decorations
-        setBackground(new Color(0, 0, 0, 0)); // Make background transparent
-        setSize(600, 30);
-        setLocationRelativeTo(null);
+        setUndecorated(true);
+        setBackground(new Color(0, 0, 0, 0));
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setSize(screenSize.width, 30);
+        setLocation(0, screenSize.height - getHeight()); // Position at the bottom
         getContentPane().setLayout(null);
 
         tickerLabel = new JLabel(tickerText);
         tickerLabel.setSize(tickerText.length() * 10, 30);
-        tickerLabel.setForeground(Color.GREEN); // Add some color
+        tickerLabel.setForeground(Color.GREEN);
         tickerLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
         getContentPane().add(tickerLabel);
 
