@@ -8,7 +8,15 @@ import java.awt.event.MouseEvent;
 
 public class FakeStockTicker extends JFrame {
 
-    private final String tickerText = "EGGS: $30.25  PMPRS: $90.75  WATR: $1050.02  ";
+    private final String tickerText = String.join("  ",
+            "EGGS: $30.25", "PMPRS: $90.75", "WATR: $1050.02",
+            "SOCK (left only): $412.00", "NAPS: $0.01", "BRKN UMBRL: $88.88",
+            "GOOSE: $666.13", "VIBES: \u25B2 $9000.01", "PIGEON: $3.14",
+            "AIR (bagged): $59.99", "SPORK: $1234.56", "MONDAY: \u25BC $0.00",
+            "TOAST: $77.77", "LOST REMOTE: $350.00", "WIFI 1 BAR: $0.50",
+            "CAT TAX: $420.69", "GLITTER: $12.00", "CRUMBS: $1.99",
+            "BANANA (for scale): $19.95", "HAT ON HAT: $2.22", "WET SOCK: -$5.00",
+            "LLAMA: $8008.13", "RUBBER DUCK: $42.00") + "  ";
     private final JLabel tickerLabel;
     private int textOffset = 0;
     private final Timer timer;
@@ -30,9 +38,9 @@ public class FakeStockTicker extends JFrame {
         getContentPane().setLayout(null);
 
         tickerLabel = new JLabel(tickerText);
-        tickerLabel.setSize(tickerText.length() * 10, 30);
         tickerLabel.setForeground(Color.GREEN);
         tickerLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+        tickerLabel.setSize(tickerLabel.getPreferredSize().width, 30); // fit the whole line in the new font
         getContentPane().add(tickerLabel);
 
         int delay = 50;
