@@ -27,9 +27,9 @@ public class FakeStockTicker extends JFrame {
 
     public FakeStockTicker() {
         setUndecorated(true);
-        // Alpha of 1 (instead of 0) looks fully transparent but still lets the
-        // whole strip receive mouse events, so it can be grabbed anywhere.
-        setBackground(new Color(0, 0, 0, 1));
+        // Dark, slightly see-through strip behind the text. Lower the last number
+        // (0-255) for more see-through, raise it to 255 for solid black.
+        setBackground(new Color(10, 10, 10, 220));
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         // Start at half the screen width so there's room to move it left and right.
         // Drag the left or right edge to resize it.
