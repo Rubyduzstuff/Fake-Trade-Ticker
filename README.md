@@ -24,7 +24,11 @@
 ## 🎥 See It in Action
 
 <div align="center">
-  <img src="assets/screenshot.png" alt="Fake Trade Ticker scrolling over a desktop" width="100%" />
+  <img src="assets/ticker_demo.gif" alt="Fake Trade Ticker scrolling" width="100%" />
+  <br /><br />
+  <img src="assets/screenshot.png" alt="Fake Trade Ticker sitting on a desktop" width="100%" />
+  <br />
+  <sub>The ticker sitting on a desktop. Drag it anywhere and resize it from its edges.</sub>
 </div>
 
 ---
