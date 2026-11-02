@@ -23,8 +23,10 @@ public class FakeStockTicker extends JFrame {
         // whole strip receive mouse events, so it can be grabbed anywhere.
         setBackground(new Color(0, 0, 0, 1));
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(screenSize.width, 30);
-        setLocation(0, screenSize.height - getHeight()); // Position at the bottom
+        // Start at half the screen width so there's room to move it left and right.
+        // Drag the left or right edge to resize it.
+        setSize(screenSize.width / 2, 30);
+        setLocation((screenSize.width - getWidth()) / 2, screenSize.height - getHeight()); // Bottom, centered
         getContentPane().setLayout(null);
 
         tickerLabel = new JLabel(tickerText);
@@ -50,21 +52,61 @@ public class FakeStockTicker extends JFrame {
         setVisible(true);
     }
 
-    /** Click and drag anywhere on the ticker to move it around the screen. */
+    /**
+     * Click and drag anywhere on the ticker to move it around the screen.
+     * Drag the left or right edge to make it wider or narrower.
+     */
     private void installDragToMove() {
+        final int edge = 8;       // how close to a side (in pixels) counts as grabbing the edge
+        final int minWidth = 150;
+
         MouseAdapter dragger = new MouseAdapter() {
+            // 0 = move, -1 = resizing from the left edge, 1 = resizing from the right edge
+            private int mode;
+            private Rectangle startBounds;
+            private Point startMouse;
+
+            private int edgeAt(MouseEvent e) {
+                Point p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), FakeStockTicker.this);
+                if (p.x < edge) return -1;
+                if (p.x >= getWidth() - edge) return 1;
+                return 0;
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int side = edgeAt(e);
+                Cursor cursor = side < 0 ? Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR)
+                        : side > 0 ? Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR)
+                        : Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR);
+                getContentPane().setCursor(cursor);
+                tickerLabel.setCursor(cursor);
+            }
+
             @Override
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isLeftMouseButton(e)) {
+                    mode = edgeAt(e);
+                    startBounds = getBounds();
+                    startMouse = e.getLocationOnScreen();
                     dragOffset = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), FakeStockTicker.this);
                 }
             }
 
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (dragOffset != null && SwingUtilities.isLeftMouseButton(e)) {
-                    Point onScreen = e.getLocationOnScreen();
+                if (dragOffset == null || !SwingUtilities.isLeftMouseButton(e)) return;
+                Point onScreen = e.getLocationOnScreen();
+                int dx = onScreen.x - startMouse.x;
+                if (mode == 0) {
                     setLocation(onScreen.x - dragOffset.x, onScreen.y - dragOffset.y);
+                } else if (mode > 0) {
+                    setBounds(startBounds.x, startBounds.y,
+                            Math.max(minWidth, startBounds.width + dx), startBounds.height);
+                } else {
+                    int width = Math.max(minWidth, startBounds.width - dx);
+                    setBounds(startBounds.x + startBounds.width - width, startBounds.y,
+                            width, startBounds.height);
                 }
             }
 
@@ -94,9 +136,23 @@ public class FakeStockTicker extends JFrame {
         JMenuItem bottomItem = new JMenuItem("Snap to Bottom");
         bottomItem.addActionListener(e -> {
             Rectangle screen = getGraphicsConfiguration().getBounds();
-            setLocation(screen.x, screen.y + screen.height - getHeight());
+            setLocation(getX(), screen.y + screen.height - getHeight());
         });
         menu.add(bottomItem);
+
+        JMenuItem fullWidthItem = new JMenuItem("Full Width");
+        fullWidthItem.addActionListener(e -> {
+            Rectangle screen = getGraphicsConfiguration().getBounds();
+            setBounds(screen.x, getY(), screen.width, getHeight());
+        });
+        menu.add(fullWidthItem);
+
+        JMenuItem halfWidthItem = new JMenuItem("Half Width (centered)");
+        halfWidthItem.addActionListener(e -> {
+            Rectangle screen = getGraphicsConfiguration().getBounds();
+            setBounds(screen.x + screen.width / 4, getY(), screen.width / 2, getHeight());
+        });
+        menu.add(halfWidthItem);
 
         menu.addSeparator();
 
